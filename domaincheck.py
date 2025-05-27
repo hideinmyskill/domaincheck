@@ -58,7 +58,7 @@ def main():
         bar = '=' * filled_length + ' ' * (loading_bar_length - filled_length)
         print(f'\r[{bar}] {int(progress * 100)}%', end='', flush=True)
 
-    print("Completed: check the filename 'output.xlsx' ")
     domains_df.to_excel('output.xlsx', index=False)
+    print("Completed: check the filename 'output.xlsx' ")
 
 main()
