@@ -4,6 +4,8 @@ import requests
 import json
 import openpyxl
 import argparse
+import datetime
+import os
 
 def getVTResults(apikey, domain):
     url = f'https://www.virustotal.com/api/v3/domains/{domain}'
@@ -45,20 +47,25 @@ def main():
     total_rows = int(len(tsvfile['Description']))
     loading_bar_length = 50
 
-    domains_df = pd.DataFrame(columns=["domains", "status", "VirusTotal Link"])
+    domains_df = pd.DataFrame(columns=["Domains", "Status", "VirusTotal Link", "Alert Link"])
+    
+    dateNow = datetime.datetime.now().strftime("%d-%m-%Y")
 
-    for index, domain in enumerate(tsvfile['Description']):
+    for index, row in enumerate(zip(tsvfile['Alert Id'],tsvfile['Description'])):
 
-        extract_domain = re.findall(domain_pattern, domain)
+        extract_domain = re.findall(domain_pattern, row[1])
+        extract_alertID = row[0]
+
         data = getVTResults(APIKEY, extract_domain[0])
-        domains_df.loc[index+1] = [f"{extract_domain[0]}", f"{data['status']}", f"https://www.virustotal.com/gui/domain/{extract_domain[0]}"]
+        domains_df.loc[index+1] = [f"{extract_domain[0]}", f"{data['status']}", f"https://www.virustotal.com/gui/domain/{extract_domain[0]}", f"https://hso.xdr.au.paloaltonetworks.com/card/alert/{extract_alertID}"]
 
         progress = index / total_rows
         filled_length = int(loading_bar_length * progress)
         bar = '=' * filled_length + ' ' * (loading_bar_length - filled_length)
         print(f'\r[{bar}] {int(progress * 100)}%', end='', flush=True)
 
-    domains_df.to_excel('output.xlsx', index=False)
-    print("Completed: check the filename 'output.xlsx' ")
+    os.makedirs("output", exist_ok=True)
+    domains_df.to_excel(f'output\\XDR-Domains-Output-{dateNow}.xlsx', index=False)
+    print(f"\nCompleted: check the filename 'XDR-Domains-Output-{dateNow}.xlsx' inside output folder. ")
 
 main()
