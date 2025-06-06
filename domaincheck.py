@@ -64,6 +64,7 @@ def main():
         bar = '=' * filled_length + ' ' * (loading_bar_length - filled_length)
         print(f'\r[{bar}] {int(progress * 100)}%', end='', flush=True)
 
+    os.makedirs("tsv-files", exist_ok=True)
     os.makedirs("output", exist_ok=True)
     domains_df.to_excel(f'output\\XDR-Domains-Output-{dateNow}.xlsx', index=False)
     print(f"\nCompleted: check the filename 'XDR-Domains-Output-{dateNow}.xlsx' inside output folder. ")
