@@ -1,0 +1,67 @@
+import { SwimlaneElement, css, html, svg } from '@swimlane/swimlane-element@2';
+import { recordFrameTemplate } from '@swimlane/swimlane-element@2/lib/templates.js';
+
+export default class extends SwimlaneElement {
+  static get styles() {
+    return [super.styles, css`
+      :host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .tsv-output {
+        padding: 16px;
+        background: #f4f7fc;
+        border-radius: 8px;
+        overflow-x: auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 6px;
+        overflow: hidden;
+        color: #333
+      }
+
+      th {
+        background-color: #007BFF; 
+        color: #fff;
+        padding: 10px 12px;
+        text-align: left;
+      }
+
+      td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #eef3fb;
+      }
+
+      a {
+        color: #007BFF;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    `];
+  }
+
+  render() {
+    return (html`
+    <div class="tsv-output" .innerHTML=${this.record['text']}></div>
+    `);
+  }
+}
